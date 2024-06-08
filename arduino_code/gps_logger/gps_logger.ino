@@ -18,12 +18,10 @@
 
 
 #include <Adafruit_GPS.h>
-#include <SPI.h>
-#include <SD.h>
 #include "DataLogger.hpp"
 #include "Helper.hpp"
 
-#define GPS_DEBUG false
+#define GPS_DEBUG true
 
 // Data Logger Instance
 DataLogger dataLogger;
@@ -43,22 +41,16 @@ void setup()
 
 
     // Ask for firmware version
-    Serial.print("\n\nGPS Library Version : ");Serial.println(PMTK_Q_RELEASE);
-    Serial.println("Setting up Route Mapper\n\n");
+    Serial.println("\n\n== Setting up Route Mapper ===\n\n");
     dataLogger.InitAndPrepare();
 
     // 9600 NMEA is the default baud rate for Adafruit MTK GPS's- some use 4800
     GPS.begin(0x10);  // The I2C address to use is 0x10
     // uncomment this line to turn on RMC (recommended minimum) and GGA (fix data) including altitude
-    GPS.sendCommand(PMTK_SET_NMEA_OUTPUT_RMCONLY);
-    // uncomment this line to turn on only the "minimum recommended" data
-    //GPS.sendCommand(PMTK_SET_NMEA_OUTPUT_RMCONLY);
-    // For parsing data, we don't suggest using anything but either RMC only or RMC+GGA since
-    // the parser doesn't care about other sentences at this time
+    GPS.sendCommand(PMTK_SET_NMEA_OUTPUT_RMCGGA);
+    
     // Set the update rate
-    GPS.sendCommand(PMTK_SET_NMEA_UPDATE_1HZ); // 1 Hz update rate
-    // For the parsing code to work nicely and have time to sort thru the data, and
-    // print it out we don't suggest using anything higher than 1 Hz
+    GPS.sendCommand(PMTK_SET_NMEA_UPDATE_2HZ);
 
     // Request updates on antenna status, comment out to keep quiet
     GPS.sendCommand(PGCMD_ANTENNA);
@@ -97,14 +89,9 @@ void loop()
           Serial.print("Altitude: "); Serial.println(GPS.altitude);
           Serial.print("Satellites: "); Serial.println((int)GPS.satellites);
         }
-        // Write the data to the file
-        //WriteGpsData();
-        String timestamp = "20" + String(GPS.year) + "-" +
-                String(GPS.month) + "-" +
-                String(GPS.day) + "T" +
-                String(GPS.hour) + ":" +
-                String(GPS.minute) + ":" +
-                String(GPS.seconds) + "Z";
+
+        String timestamp = helper.FormatDateAndTime(GPS.year, GPS.month, GPS.day, GPS.hour, GPS.minute, GPS.seconds );
+        Serial.print("timestamp: "); Serial.println(timestamp);
         dataLogger.Write( timestamp, helper.ConvertToDecimalDegrees(GPS.latitude, GPS.lat), helper.ConvertToDecimalDegrees(GPS.longitude, GPS.lon) );
     }
 }

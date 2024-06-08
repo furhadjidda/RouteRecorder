@@ -33,3 +33,15 @@ float Helper::ConvertToDecimalDegrees(float rawDegrees, char direction)
 
     return decimalDegrees;
 }
+
+
+String  Helper::FormatDateAndTime( uint8_t year, uint8_t month, uint8_t day, uint8_t hour, uint8_t min, uint8_t sec)
+{
+    String timestamp = "20" + String(year) + "-" +
+                String(month) + "-" +
+                String(day) + "T" +
+                String(hour) + ":" +
+                String(min) + ":" +
+                String(sec) + "Z";
+    return timestamp;
+}

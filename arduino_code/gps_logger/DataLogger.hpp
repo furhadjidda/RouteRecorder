@@ -15,7 +15,8 @@
 * You should have received a copy of the GNU General Public License
 * along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
-
+#ifndef DataLogger_h
+#define DataLogger_h
 #include <SPI.h>
 #include <SD.h>
 #include <Adafruit_GPS.h>
@@ -30,3 +31,4 @@ class DataLogger{
         const int chipSelect{SDCARD_SS_PIN};
         const String mFileName{"gpsdata.csv"};
 };
+#endif

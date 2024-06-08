@@ -16,10 +16,16 @@
 * along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+#ifndef Helper_h
+#define Helper_h
+
+#include "Arduino.h"
 
 class Helper {
 
     public:
         float ConvertToDecimalDegrees(float rawDegrees, char direction);
+        String FormatDateAndTime( uint8_t year, uint8_t month, uint8_t day, uint8_t hour, uint8_t min, uint8_t sec);
 
 };
+#endif
