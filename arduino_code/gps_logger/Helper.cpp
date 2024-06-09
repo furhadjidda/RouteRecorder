@@ -17,7 +17,7 @@
 */
 
 #include "Helper.hpp"
-
+#include <cmath>
 // Reference : https://stackoverflow.com/questions/36254363/how-to-convert-latitude-and-longitude-of-nmea-format-data-to-decimal
 float Helper::ConvertToDecimalDegrees(float rawDegrees, char direction)
 {
@@ -30,8 +30,9 @@ float Helper::ConvertToDecimalDegrees(float rawDegrees, char direction)
     if (direction == 'S' || direction == 'W') {
       decimalDegrees *= -1;
     }
-
-    return decimalDegrees;
+    // This is done so that the number is truncated to 6 decimal places 
+    double scale = pow(10.0,6);
+    return floor(decimalDegrees*scale)/scale;
 }
 
 
